@@ -18,14 +18,16 @@ import (
 )
 
 var (
-	port = flag.Int("port", 4050, "The server port")
+	port    = flag.Int("port", 4050, "The server port")
 	cursors sync.Map
 )
 
+// Event represents a pointer position.
+//
+// The fields of this struct must be exported so that the json module will be
+// able to write into them. Therefore we need field tags to specify the names
+// by which these fields go in the JSON representation of events.
 type Event struct {
-	// The fields of this struct must be exported so that the json module will be
-	// able to write into them. Therefore we need field tags to specify the names
-	// by which these fields go in the JSON representation of events.
 	X int `json:"x"`
 	Y int `json:"y"`
 }
@@ -43,7 +45,7 @@ func handleWebsocketEchoMessage(ws *websocket.Conn, e Event) error {
 	if err != nil {
 		return fmt.Errorf("Can't send: %s", err.Error())
 	}
-	cursors.Store(ws, e);
+	cursors.Store(ws, e)
 	return nil
 }
 
@@ -55,7 +57,7 @@ func websocketEchoConnection(ws *websocket.Conn) {
 		err := websocket.JSON.Receive(ws, &event)
 		if err != nil {
 			log.Printf("Receive failed: %s; closing connection...", err.Error())
-			cursors.Delete(ws);
+			cursors.Delete(ws)
 			if err = ws.Close(); err != nil {
 				log.Println("Error closing connection:", err.Error())
 			}
@@ -73,11 +75,13 @@ func websocketEchoConnection(ws *websocket.Conn) {
 func websocketTimeConnection(ws *websocket.Conn) {
 	for range time.Tick(10 * time.Millisecond) {
 		// Once a second, send a message (as a string) with the current time.
-		values := struct { Cursors []Event `json:"cursors"` } {}
+		values := struct {
+			Cursors []Event `json:"cursors"`
+		}{}
 		cursors.Range(func(k, v interface{}) bool {
 			values.Cursors = append(values.Cursors, v.(Event))
 			return true
-		});
+		})
 		websocket.JSON.Send(ws, values)
 	}
 }
