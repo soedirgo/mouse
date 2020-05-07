@@ -76,9 +76,11 @@ func websocketTimeConnection(ws *websocket.Conn) {
 	for range time.Tick(10 * time.Millisecond) {
 		// Once a second, send a message (as a string) with the current time.
 		values := struct {
+			Players int `json:"players"`
 			Cursors []Event `json:"cursors"`
 		}{}
 		cursors.Range(func(k, v interface{}) bool {
+			values.Players++
 			values.Cursors = append(values.Cursors, v.(Event))
 			return true
 		})

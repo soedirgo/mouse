@@ -28,7 +28,11 @@ window.onload = () => {
 
     sockTime = new WebSocket(wsServerAddress + "/wstime");
     sockTime.onmessage = e => {
-        let cursors = JSON.parse(e.data).cursors;
+        let msg = JSON.parse(e.data);
+        let players = "No: of players: " + msg.players;
+        let cursors = msg.cursors;
+
+        document.getElementById("players").innerHTML = players;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         if (cursors) {
             cursors.forEach(cursor => {
@@ -47,7 +51,7 @@ canvas.onmousemove = e => {
 }
 
 canvas.onmouseout = () => {
-    document.getElementById("output").innerHTML = "";
+    document.getElementById("output").innerHTML = "Coordinates: (?, ?)";
 }
 
 // Send the msg object, encoded with JSON, on the websocket if it's open.
