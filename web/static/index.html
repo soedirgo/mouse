@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<!--
+     Client-side part of the Go websocket sample.
+
+     Simple HTML page with some JS that records mouse movement events and sends them
+     into a websocket. On receiving messages from this websocket, reports them as
+     text in a <p> beneath the box.
+
+     Eli Bendersky [http://eli.thegreenplace.net]
+     Bobbie Soedirgo [https://soedirgo.dev]
+     This code is in the public domain.
+-->
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css" type="text/css" />
+    </head>
+    <body>
+        <canvas id="canvas" width="500" height="479""></canvas>
+        <p id="output"></p>
+    </body>
+    <script src="index.js"></script>
+</html>
