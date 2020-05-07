@@ -29,7 +29,7 @@ window.onload = () => {
     sockTime = new WebSocket(wsServerAddress + "/wstime");
     sockTime.onmessage = e => {
         let msg = JSON.parse(e.data);
-        let players = "No: of players: " + msg.players;
+        let players = "No. of players: " + msg.players;
         let cursors = msg.cursors;
 
         document.getElementById("players").innerHTML = players;
